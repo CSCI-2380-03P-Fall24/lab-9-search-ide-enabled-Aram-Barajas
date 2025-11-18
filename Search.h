@@ -7,7 +7,11 @@ using namespace std;
 //   bonus (+5% to your grade for this lab)! try to implement your function so that it can accept
 //     many types of data (int, char, string, etc.)
 template <typename flexibleType> // ???
-void printArray(...) {}
+void printArray(flexibleType arr[], int n) {
+    for(int i = 0; i < n; i++){
+        cout << arr[i] << " ";
+    }
+}
 
 // Implement a sequential search algorithm
 // your function should search for a target value (target)
@@ -15,6 +19,14 @@ void printArray(...) {}
 // return true if target exists in the array within this range,
 //    return false otherwise
 bool seqSearch(string target, string arr[], int start, int end) {
+   int temp = 0;
+    while(start <= end){
+        if(target == arr[temp]){
+            return true;
+        }
+        temp++;
+        start++;
+    }
     return false;
 }
 
@@ -22,6 +34,20 @@ bool seqSearch(string target, string arr[], int start, int end) {
 // Return true if target exists in the array with size n,
 //    return false otherwise 
 bool binSearch(float target, float arr[], int n) {
+   int left = 0;
+   int right = n-1;
+    while(left <= right){
+    int mid = left+((right-left)/2);
+        if(target == arr[mid]){
+            return true;
+        }
+        else if(arr[mid] > target){
+            right = mid-1;
+        }
+        else{
+            left = mid+1;
+        }
+    }
     return false;	
 }
 
@@ -29,11 +55,20 @@ bool binSearch(float target, float arr[], int n) {
 // Return true if target exists in the array with size n
 //   return false otherwise
 bool binSearchR(char target, char charray[], int n) {
-    // base case
-
-    //general case
-
-    return false;
+      // base case
+    if (n <= 0) {
+        return false;
+    }
+    int mid = n / 2;
+    if (charray[mid] == target) {
+        return true;
+    }
+    else if (charray[mid] > target) {
+        return binSearchR(target, charray, mid);
+    }
+    else {
+        return binSearchR(target, charray + mid + 1, n - (mid + 1));
+    }
 }
 
 // Implement a brand new sorting algorithm
@@ -57,13 +92,28 @@ Step 3: Finally, use your two functions above to complete the following in newSo
         *** You can make this recursive, if you wish!
 */
 
-void swap(double darray[], ...) {}
-
-int minFind(double darray[], ...) {
-    return -1;
+void swap(double darray[], int a, int b) {
+     double temp = darray[a];
+    darray[a] = darray[b];
+    darray[b] = temp;
 }
 
-void newSort(double darray[], int n) {}
+int minFind(double darray[], int size) {
+    int smallestIndex = 0;
+    for (int i = 1; i < size; i++) {
+        if (darray[i] < darray[smallestIndex]) {
+            smallestIndex = i;
+        }
+    }
+
+    return smallestIndex;
+}
+void newSort(double darray[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        int minIndex = i + minFind(darray + i, n - i);
+        swap(darray, i, minIndex);
+    }
+}
 
 
 // Implement Exponential Search
@@ -79,5 +129,29 @@ void newSort(double darray[], int n) {}
 //         You may pass a pointer to the start of the window and its length,
 //         or copy that window to a temporary buffer if you prefer.
 bool expSearch(float target, float arr[], int n) {
-    return false;
+    if(n == 0){
+        return false;
+    }
+    if(arr[0] == target){
+        return true;
+    }
+    if(arr[0] > target){
+        return false;
+    }
+    int bound = 1;
+    while(bound < n && arr[bound] < target){
+        bound *=2;
+    }
+    int left = bound/2;
+    int right = 0;
+    if(bound < n){
+        right = bound;
+    }
+    else{
+        right = n-1;
+    }
+    int window = right-left+1;
+    bool result = false;
+    result = binSearch(target, arr+left, window);
+    return result;
 }
